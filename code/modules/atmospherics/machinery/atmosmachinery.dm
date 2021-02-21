@@ -54,7 +54,7 @@
 	var/on = FALSE
 
 	///Whether it can be painted
-	var/paintable = FALSE
+	var/paintable = TRUE
 
 /obj/machinery/atmospherics/examine(mob/user)
 	. = ..()
@@ -192,9 +192,14 @@
  * * direction - the direction we are checking against
  * * prompted_layer - the piping_layer we are inside
  */
-/obj/machinery/atmospherics/proc/findConnecting(direction, prompted_layer)
+/obj/machinery/atmospherics/proc/findConnecting(direction, prompted_layer, connect_all = FALSE, color_piping)
 	for(var/obj/machinery/atmospherics/target in get_step(src, direction))
 		if(target.initialize_directions & get_dir(target,src))
+			if(connect_all)
+				if(target.pipe_color != GLOB.pipe_paint_colors[color_piping] || target.piping_layer != prompted_layer)
+					continue
+				else
+					return target
 			if(connection_check(target, prompted_layer))
 				return target
 
@@ -222,7 +227,8 @@
 /obj/machinery/atmospherics/proc/isConnectable(obj/machinery/atmospherics/target, given_layer)
 	if(isnull(given_layer))
 		given_layer = piping_layer
-	if((target.piping_layer == given_layer) || (target.pipe_flags & PIPING_ALL_LAYER))
+	if(	((target.piping_layer == given_layer) || (target.pipe_flags & PIPING_ALL_LAYER)) && \
+		((target.pipe_color == pipe_color) || (target.pipe_flags & PIPING_ALL_COLORS) || (target.pipe_color == null) || (pipe_color == null)))
 		return TRUE
 	return FALSE
 
