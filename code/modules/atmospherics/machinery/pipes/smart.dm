@@ -8,6 +8,9 @@
 	device_type = QUATERNARY
 	construction_type = /obj/item/pipe/quaternary
 	pipe_state = "manifold4w"
+
+	vis_flags = VIS_INHERIT_ICON | VIS_INHERIT_ICON_STATE | VIS_INHERIT_DIR | VIS_INHERIT_ID
+
 	var/mutable_appearance/center
 	var/connection_num = 0
 	var/list/connections
@@ -78,11 +81,12 @@
 	cut_overlays()
 	check_connections()
 	PIPING_LAYER_DOUBLE_SHIFT(center, piping_layer)
-	add_overlay(center)
 
 	//Add non-broken pieces
 	for(var/i in 1 to device_type)
 		if(nodes[i])
 			add_overlay( getpipeimage(icon, "pipe-[piping_layer]", get_dir(src, nodes[i])) )
+
+	add_overlay(center)
 
 	update_layer()
