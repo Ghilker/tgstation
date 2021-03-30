@@ -11,6 +11,8 @@
 	layer = OBJ_LAYER
 	circuit = /obj/item/circuitboard/machine/thermomachine
 
+	move_resist = MOVE_RESIST_DEFAULT
+
 	pipe_flags = PIPING_ONE_PER_TURF
 
 	var/icon_state_off = "freezer"
@@ -34,6 +36,11 @@
 	. = ..()
 	RefreshParts()
 	update_appearance()
+
+/obj/machinery/atmospherics/components/binary/thermomachine/atmosinit()
+	if(panel_open)
+		return
+	. = ..()
 
 /obj/machinery/atmospherics/components/binary/thermomachine/getNodeConnects()
 	return list(dir, turn(dir, 180))
@@ -196,8 +203,9 @@
 	update_parents()
 
 /obj/machinery/atmospherics/components/binary/thermomachine/attackby(obj/item/item, mob/user, params)
-	if(!on && !holding)
+	if(!on && !holding && anchored)
 		if(default_deconstruction_screwdriver(user, icon_state_open, icon_state_off, item))
+			change_pipe_connection(panel_open)
 			return
 	if(default_change_direction_wrench(user, item))
 		return
@@ -219,17 +227,31 @@
 	if(!..())
 		return FALSE
 	SetInitDirections()
-	var/turf/local_turf = get_turf(src)
-	var/datum/gas_mixture/enviroment = local_turf.return_air()
+	return TRUE
+
+/obj/machinery/atmospherics/components/binary/thermomachine/proc/change_pipe_connection(disconnect)
+	if(disconnect)
+		disconnect_pipes()
+		return
+	connect_pipes()
+
+/obj/machinery/atmospherics/components/binary/thermomachine/proc/connect_pipes()
 	var/obj/machinery/atmospherics/node1 = nodes[1]
 	var/obj/machinery/atmospherics/node2 = nodes[2]
-	if(airs[1].total_moles())
-		var/datum/gas_mixture/remove = airs[1].remove(airs[1].total_moles())
-		enviroment.merge(remove)
-	if(airs[2].total_moles())
-		var/datum/gas_mixture/remove = airs[2].remove(airs[2].total_moles())
-		enviroment.merge(remove)
-	air_update_turf(FALSE, FALSE)
+	atmosinit()
+	node1 = nodes[1]
+	if(node1)
+		node1.atmosinit()
+		node1.addMember(src)
+	node2 = nodes[2]
+	if(node2)
+		node2.atmosinit()
+		node2.addMember(src)
+	SSair.add_to_rebuild_queue(src)
+
+/obj/machinery/atmospherics/components/binary/thermomachine/proc/disconnect_pipes()
+	var/obj/machinery/atmospherics/node1 = nodes[1]
+	var/obj/machinery/atmospherics/node2 = nodes[2]
 	if(node1)
 		if(src in node1.nodes) //Only if it's actually connected. On-pipe version would is one-sided.
 			node1.disconnect(src)
@@ -244,17 +266,10 @@
 	if(parents[2])
 		nullifyPipenet(parents[2])
 
-	atmosinit()
-	node1 = nodes[1]
-	if(node1)
-		node1.atmosinit()
-		node1.addMember(src)
-	node2 = nodes[2]
-	if(node2)
-		node2.atmosinit()
-		node2.addMember(src)
-	SSair.add_to_rebuild_queue(src)
-	return TRUE
+/obj/machinery/atmospherics/components/binary/thermomachine/attackby_secondary(obj/item/item, mob/user, params)
+	. = ..()
+	if(panel_open && item.tool_behaviour == TOOL_WRENCH)
+		set_anchored(!anchored)
 
 /obj/machinery/atmospherics/components/binary/thermomachine/proc/replace_tank(mob/living/user, obj/item/tank/new_tank)
 	if(!user)
@@ -352,11 +367,13 @@
 	update_appearance()
 
 /obj/machinery/atmospherics/components/binary/thermomachine/CtrlClick(mob/living/user)
-	if(!can_interact(user))
-		return
-	on = !on
-	investigate_log("was turned [on ? "on" : "off"] by [key_name(user)]", INVESTIGATE_ATMOS)
-	update_appearance()
+	if(!panel_open)
+		if(!can_interact(user))
+			return
+		on = !on
+		investigate_log("was turned [on ? "on" : "off"] by [key_name(user)]", INVESTIGATE_ATMOS)
+		update_appearance()
+	. = ..()
 
 /obj/machinery/atmospherics/components/binary/thermomachine/freezer
 	icon_state = "freezer"
