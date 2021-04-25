@@ -43,11 +43,11 @@
 
 /obj/machinery/atmospherics/components/binary/temperature_gate/update_icon_nopipes()
 	if(on && is_operational && is_gas_flowing)
-		icon_state = "tgate_flow-[set_overlay_offset(piping_layer)]"
+		icon_state = "tgate_flow-1"
 	else if(on && is_operational && !is_gas_flowing)
-		icon_state = "tgate_on-[set_overlay_offset(piping_layer)]"
+		icon_state = "tgate_on-1"
 	else
-		icon_state = "tgate_off-[set_overlay_offset(piping_layer)]"
+		icon_state = "tgate_off-1"
 
 
 /obj/machinery/atmospherics/components/binary/temperature_gate/process_atmos()

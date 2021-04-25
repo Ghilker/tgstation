@@ -32,7 +32,7 @@
 	if(nodes[1])
 		var/obj/machinery/atmospherics/node = nodes[1]
 		add_atom_colour(node.color, FIXED_COLOUR_PRIORITY)
-	PIPING_LAYER_SHIFT(src, piping_layer)
+	PIPING_LAYER_DOUBLE_SHIFT(src, piping_layer)
 
 /obj/machinery/atmospherics/components/unary/heat_exchanger/atmosinit()
 	if(!partner)

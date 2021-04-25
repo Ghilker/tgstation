@@ -9,6 +9,7 @@
 	initialize_directions = NORTH | SOUTH
 	pipe_flags = PIPING_CARDINAL_AUTONORMALIZE | PIPING_BRIDGE
 	device_type = BINARY
+	layer = HIGH_PIPE_LAYER
 
 	construction_type = /obj/item/pipe/binary
 	pipe_state = "bridge_center"
@@ -41,7 +42,6 @@
 	for(var/i in 1 to device_type)
 		if(!nodes[i])
 			continue
-		var/image/pipe = getpipeimage('icons/obj/atmospherics/pipes/manifold.dmi', "pipe-3", get_dir(src, nodes[i]))
+		var/image/pipe = getpipeimage('icons/obj/atmospherics/pipes/manifold.dmi', "pipe-3", get_dir(src, nodes[i]), set_layer = layer + 0.001)
 		PIPING_LAYER_DOUBLE_SHIFT(pipe, piping_layer)
-		pipe.layer = layer + 0.01
 		. += pipe

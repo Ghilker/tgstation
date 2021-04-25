@@ -53,10 +53,10 @@
 /obj/machinery/atmospherics/components/unary/vent_pump/update_icon_nopipes()
 	cut_overlays()
 	if(showpipe)
-		var/image/cap = getpipeimage(icon, "vent_cap", initialize_directions)
+		var/image/cap = getpipeimage(icon, "vent_cap", initialize_directions, set_layer = layer + 0.001)
 		add_overlay(cap)
 	else
-		PIPING_LAYER_SHIFT(src, PIPING_LAYER_DEFAULT)
+		PIPING_LAYER_DOUBLE_SHIFT(src, PIPING_LAYER_DEFAULT)
 
 	if(welded)
 		icon_state = "vent_welded"

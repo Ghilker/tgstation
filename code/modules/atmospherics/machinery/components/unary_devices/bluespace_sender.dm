@@ -55,9 +55,9 @@
 
 /obj/machinery/atmospherics/components/unary/bluespace_sender/update_overlays()
 	. = ..()
-	. += getpipeimage(icon, "pipe", dir, , piping_layer)
+	. += getpipeimage(icon, "pipe", dir, , piping_layer, set_layer = layer + 0.001)
 	if(showpipe)
-		. += getpipeimage(icon, "pipe", initialize_directions)
+		. += getpipeimage(icon, "pipe", initialize_directions, set_layer = layer + 0.001)
 
 /obj/machinery/atmospherics/components/unary/bluespace_sender/process_atmos()
 	if(!is_operational || !on || !nodes[1])  //if it has no power or its switched off, dont process atmos

@@ -467,8 +467,7 @@
 #define PIPING_LAYER_MIN 1
 #define PIPING_LAYER_MAX 5
 #define PIPING_LAYER_DEFAULT 3
-#define PIPING_LAYER_P_X 5
-#define PIPING_LAYER_P_Y 5
+#define PIPING_LAYER_PIXEL_SHIFT 5
 #define PIPING_LAYER_LCHANGE 0.05
 
 /// intended to connect with all layers, check for all instead of just one.
@@ -495,10 +494,10 @@
 //Helpers
 #define PIPING_LAYER_SHIFT(T, PipingLayer) \
 	if(T.dir & (NORTH|SOUTH)) { \
-		T.pixel_x = (PipingLayer - PIPING_LAYER_DEFAULT) * PIPING_LAYER_P_X;\
+		T.pixel_x = (PipingLayer - PIPING_LAYER_DEFAULT) * PIPING_LAYER_PIXEL_SHIFT;\
 	} \
 	if(T.dir & (EAST|WEST)) { \
-		T.pixel_y = (PipingLayer - PIPING_LAYER_DEFAULT) * PIPING_LAYER_P_Y;\
+		T.pixel_y = (PipingLayer - PIPING_LAYER_DEFAULT) * PIPING_LAYER_PIXEL_SHIFT;\
 	}
 
 #define PIPING_FORWARD_SHIFT(T, PipingLayer, more_shift) \
@@ -510,8 +509,8 @@
 	}
 
 #define PIPING_LAYER_DOUBLE_SHIFT(T, PipingLayer) \
-	T.pixel_x = (PipingLayer - PIPING_LAYER_DEFAULT) * PIPING_LAYER_P_X;\
-	T.pixel_y = (PipingLayer - PIPING_LAYER_DEFAULT) * PIPING_LAYER_P_Y;
+	T.pixel_x = (PipingLayer - PIPING_LAYER_DEFAULT) * PIPING_LAYER_PIXEL_SHIFT;\
+	T.pixel_y = (PipingLayer - PIPING_LAYER_DEFAULT) * PIPING_LAYER_PIXEL_SHIFT;
 
 #define THERMAL_ENERGY(gas) (gas.temperature * gas.heat_capacity())
 

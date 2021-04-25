@@ -97,8 +97,31 @@ GLOBAL_LIST_INIT(atmos_components, typecacheof(list(/obj/machinery/atmospherics)
 	for(var/i in 1 to device_type)
 		if(!nodes[i])
 			continue
-		. += pipe_overlay('icons/obj/atmospherics/pipes/manifold.dmi', "pipe-[piping_layer]", get_dir(src, nodes[i]), set_layer = (layer + 0.01))
+		. += pipe_overlay(
+			set_icon = 'icons/obj/atmospherics/pipes/manifold.dmi',
+			set_state = "pipe-3",
+			direction = get_dir(src, nodes[i]),
+			set_piping_layer = piping_layer,
+			set_layer = (layer + 0.001)
+		)
 
+	switch(connection_num)
+		if(3)
+			. += pipe_overlay(
+			set_icon = 'icons/obj/atmospherics/pipes/manifold.dmi',
+			set_state = "3w_overlay",
+			direction = dir,
+			set_piping_layer = piping_layer,
+			set_layer = (layer + 0.002)
+		)
+		if(4)
+			. += pipe_overlay(
+			set_icon = 'icons/obj/atmospherics/pipes/manifold.dmi',
+			set_state = "4w_overlay",
+			direction = SOUTH,
+			set_piping_layer = piping_layer,
+			set_layer = (layer + 0.002)
+		)
 
 //mapping helpers
 /obj/machinery/atmospherics/pipe/smart/simple

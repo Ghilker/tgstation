@@ -31,6 +31,7 @@
 
 /obj/machinery/atmospherics/pipe/color_adapter/update_overlays()
 	. = ..()
+	color = COLOR_VERY_LIGHT_GRAY
 	var/mutable_appearance/center = center_cache["[piping_layer]"]
 	if(!center)
 		center = mutable_appearance(icon, "adapter_center")
@@ -44,9 +45,8 @@
 	for(var/i in 1 to device_type)
 		if(!nodes[i])
 			continue
-		var/image/pipe = getpipeimage('icons/obj/atmospherics/pipes/manifold.dmi', "pipe-3", get_dir(src, nodes[i]), nodes[i].pipe_color)
+		var/image/pipe = getpipeimage('icons/obj/atmospherics/pipes/manifold.dmi', "pipe-3", get_dir(src, nodes[i]), nodes[i].pipe_color, set_layer = layer - 0.001)
 		PIPING_LAYER_DOUBLE_SHIFT(pipe, piping_layer)
-		pipe.layer = layer + 0.01
 		. += pipe
 
 /obj/machinery/atmospherics/pipe/color_adapter/layer1

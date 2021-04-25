@@ -1,6 +1,6 @@
 /obj/machinery/atmospherics/pipe/layer_manifold
 	name = "layer adaptor"
-	icon = 'icons/obj/atmospherics/pipes/manifold.dmi'
+	icon = 'icons/obj/atmospherics/pipes/layer_manifold.dmi'
 	icon_state = "manifoldlayer"
 	desc = "A special pipe to bridge pipe layers with."
 	dir = SOUTH
@@ -59,13 +59,18 @@
 		for(var/i in PIPING_LAYER_MIN to PIPING_LAYER_MAX)
 			. += get_attached_image(get_dir(src, A), i, COLOR_VERY_LIGHT_GRAY)
 		return
-	. += get_attached_image(get_dir(src, A), A.piping_layer, A.pipe_color)
+	. += get_attached_image(get_dir(src, A), A.piping_layer)
 
-/obj/machinery/atmospherics/pipe/layer_manifold/proc/get_attached_image(p_dir, p_layer, p_color)
-	// Uses pipe-3 because we don't want the vertical shifting
-	var/image/I = getpipeimage(icon, "pipe-3", p_dir, p_color, p_layer)
-	I.layer = layer - 0.01
-	return I
+/obj/machinery/atmospherics/pipe/layer_manifold/proc/get_attached_image(p_dir, p_layer)
+	var/image/pipe_connection = getpipeimage(iconset = 'icons/obj/atmospherics/pipes/layer_manifold.dmi',
+		iconstate = "pipe-[piping_layer]",
+		direction = p_dir,
+		piping_layer = p_layer,
+		set_layer = layer - 0.001,
+		forward = TRUE,
+		double_shift = FALSE
+	)
+	return pipe_connection
 
 /obj/machinery/atmospherics/pipe/layer_manifold/SetInitDirections()
 	switch(dir)

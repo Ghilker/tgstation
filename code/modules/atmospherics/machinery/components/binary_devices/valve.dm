@@ -22,8 +22,8 @@ It's like a regular ol' straight pipe, but you can turn it on and off.
 /obj/machinery/atmospherics/components/binary/valve/update_icon_nopipes(animation = FALSE)
 	normalize_cardinal_directions()
 	if(animation)
-		flick("[valve_type]valve_[on][!on]-[set_overlay_offset(piping_layer)]", src)
-	icon_state = "[valve_type]valve_[on ? "on" : "off"]-[set_overlay_offset(piping_layer)]"
+		flick("[valve_type]valve_[on][!on]-1", src)
+	icon_state = "[valve_type]valve_[on ? "on" : "off"]-1"
 
 /**
  * Called by finish_interact(), switch between open and closed, reconcile the air between two pipelines
@@ -69,7 +69,7 @@ It's like a regular ol' straight pipe, but you can turn it on and off.
 /obj/machinery/atmospherics/components/binary/valve/digital/update_icon_nopipes(animation)
 	if(!is_operational)
 		normalize_cardinal_directions()
-		icon_state = "dvalve_nopower-[set_overlay_offset(piping_layer)]"
+		icon_state = "dvalve_nopower-1"
 		return
 	return..()
 

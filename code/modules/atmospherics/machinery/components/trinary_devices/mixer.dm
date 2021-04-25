@@ -16,6 +16,10 @@
 
 	//node 3 is the outlet, nodes 1 & 2 are intakes
 
+/obj/machinery/atmospherics/components/trinary/mixer/Initialize()
+	icon_state = ""
+	. = ..()
+
 /obj/machinery/atmospherics/components/trinary/mixer/CtrlClick(mob/user)
 	if(can_interact(user))
 		on = !on
@@ -33,15 +37,17 @@
 
 /obj/machinery/atmospherics/components/trinary/mixer/update_overlays()
 	. = ..()
+	var/mutable_appearance/center
+	var/on_state = on && nodes[1] && nodes[2] && nodes[3] && is_operational
+	center = mutable_appearance(icon, "mixer_[on_state ? "on" : "off"]-0[flipped ? "_f" : ""]")
+	PIPING_LAYER_DOUBLE_SHIFT(center, piping_layer)
+	. += center
+
 	for(var/direction in GLOB.cardinals)
 		if(!(direction & initialize_directions))
 			continue
 
-		. += getpipeimage(icon, "cap", direction, pipe_color, piping_layer, TRUE)
-
-/obj/machinery/atmospherics/components/trinary/mixer/update_icon_nopipes()
-	var/on_state = on && nodes[1] && nodes[2] && nodes[3] && is_operational
-	icon_state = "mixer_[on_state ? "on" : "off"]-[set_overlay_offset(piping_layer)][flipped ? "_f" : ""]"
+		. += getpipeimage(icon, "cap", direction, pipe_color, piping_layer, set_layer = layer + 0.001)
 
 /obj/machinery/atmospherics/components/trinary/mixer/New()
 	..()

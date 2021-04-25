@@ -421,31 +421,34 @@
  * * direction - the direction of our device
  * * col - the color (in hex value, like #559900) that the pipe should have
  * * piping_layer - the piping_layer the device is in, used inside PIPING_LAYER_SHIFT
- * * trinary - if TRUE we also use PIPING_FORWARD_SHIFT on layer 1 and 5 for trinary devices (filters and mixers)
+ * * forward - if TRUE we also use PIPING_FORWARD_SHIFT
  */
-/obj/machinery/atmospherics/proc/getpipeimage(iconset, iconstate, direction, col=rgb(255,255,255), piping_layer=3, trinary = FALSE)
+/obj/machinery/atmospherics/proc/getpipeimage(iconset, iconstate, direction, col=rgb(255,255,255), piping_layer=3, forward = FALSE, set_layer = GAS_PIPE_VISIBLE_LAYER, double_shift = TRUE)
 
 	//Add identifiers for the iconset
 	if(iconsetids[iconset] == null)
 		iconsetids[iconset] = num2text(iconsetids.len + 1)
 
 	//Generate a unique identifier for this image combination
-	var/identifier = iconsetids[iconset] + "_[iconstate]_[direction]_[col]_[piping_layer]"
+	var/identifier = iconsetids[iconset] + "_[iconstate]_[direction]_[col]_[piping_layer]_[forward]_[set_layer]_[double_shift]"
 
 	if((!(. = pipeimages[identifier])))
 		var/image/pipe_overlay
-		pipe_overlay = . = pipeimages[identifier] = image(iconset, iconstate, dir = direction)
+		pipe_overlay = . = pipeimages[identifier] = image(iconset, iconstate, dir = direction, layer = set_layer)
 		pipe_overlay.color = col
-		PIPING_LAYER_SHIFT(pipe_overlay, piping_layer)
-		if(trinary == TRUE && (piping_layer == 1 || piping_layer == 5))
-			PIPING_FORWARD_SHIFT(pipe_overlay, piping_layer, 2)
+		if(double_shift)
+			PIPING_LAYER_DOUBLE_SHIFT(pipe_overlay, piping_layer)
+		else
+			PIPING_LAYER_SHIFT(pipe_overlay, piping_layer)
+		if(forward)
+			PIPING_FORWARD_SHIFT(pipe_overlay, piping_layer, PIPING_LAYER_PIXEL_SHIFT)
 
 ///Similar to getpipeimage(); will create an image from the set_icon and set_state; mostly used to create overlays for connections.
-/obj/machinery/atmospherics/proc/pipe_overlay(set_icon, set_state, direction, color = COLOR_VERY_LIGHT_GRAY, piping_layer = 3, set_layer = PIPE_VISIBLE_LEVEL)
+/obj/machinery/atmospherics/proc/pipe_overlay(set_icon, set_state, direction, color = COLOR_VERY_LIGHT_GRAY, set_piping_layer = 3, set_layer = GAS_PIPE_VISIBLE_LAYER)
 	var/image/pipe_overlay
 	pipe_overlay = image(icon = set_icon, icon_state = set_state, layer = set_layer, dir = direction)
 	pipe_overlay.color = color
-	PIPING_LAYER_SHIFT(pipe_overlay, piping_layer)
+	PIPING_LAYER_DOUBLE_SHIFT(pipe_overlay, set_piping_layer)
 	return pipe_overlay
 
 /obj/machinery/atmospherics/on_construction(obj_color, set_layer)
@@ -528,7 +531,7 @@
  * Update the layer in which the pipe/device is in, that way pipes have consistent layer depending on piping_layer
  */
 /obj/machinery/atmospherics/proc/update_layer()
-	layer = initial(layer) + (piping_layer - PIPING_LAYER_DEFAULT) * PIPING_LAYER_LCHANGE + (GLOB.pipe_colors_ordered[pipe_color] * 0.01)
+	layer = initial(layer) + (piping_layer - PIPING_LAYER_DEFAULT) * PIPING_LAYER_LCHANGE + (GLOB.pipe_colors_ordered[pipe_color] * 0.001)
 
 /**
  * Called by the RPD.dm pre_attack(), overriden by pipes.dm

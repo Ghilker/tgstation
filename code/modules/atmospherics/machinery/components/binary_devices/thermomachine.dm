@@ -17,6 +17,8 @@
 
 	pipe_flags = PIPING_ONE_PER_TURF
 
+	showpipe = FALSE
+
 	var/icon_state_off = "freezer"
 	var/icon_state_on = "freezer_1"
 	var/icon_state_open = "freezer-o"
@@ -93,8 +95,8 @@
 
 /obj/machinery/atmospherics/components/binary/thermomachine/update_overlays()
 	. = ..()
-	. += getpipeimage(icon, "pipe", dir, COLOR_LIME, piping_layer)
-	. += getpipeimage(icon, "pipe", turn(dir, 180), COLOR_MOSTLY_PURE_RED, piping_layer)
+	. += getpipeimage(icon, "pipe", dir, COLOR_LIME, piping_layer, set_layer = layer + 0.001, double_shift = FALSE)
+	. += getpipeimage(icon, "pipe", turn(dir, 180), COLOR_MOSTLY_PURE_RED, piping_layer, set_layer = layer + 0.001, double_shift = FALSE)
 	if(holding)
 		var/mutable_appearance/holding = mutable_appearance(icon, "holding")
 		. += holding
