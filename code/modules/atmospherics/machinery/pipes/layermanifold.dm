@@ -1,6 +1,6 @@
 /obj/machinery/atmospherics/pipe/layer_manifold
 	name = "layer adaptor"
-	icon = 'icons/obj/atmospherics/pipes/layer_manifold.dmi'
+	icon = 'icons/obj/atmospherics/pipes/manifold.dmi'
 	icon_state = "manifoldlayer"
 	desc = "A special pipe to bridge pipe layers with."
 	dir = SOUTH
@@ -62,13 +62,14 @@
 	. += get_attached_image(get_dir(src, A), A.piping_layer)
 
 /obj/machinery/atmospherics/pipe/layer_manifold/proc/get_attached_image(p_dir, p_layer)
-	var/image/pipe_connection = getpipeimage(iconset = 'icons/obj/atmospherics/pipes/layer_manifold.dmi',
-		iconstate = "pipe-[piping_layer]",
+	var/image/pipe_connection = getpipeimage(iconset = 'icons/obj/atmospherics/pipes/manifold.dmi',
+		iconstate = "pipe-[p_layer]",
 		direction = p_dir,
 		piping_layer = p_layer,
 		set_layer = layer - 0.001,
 		forward = TRUE,
-		double_shift = FALSE
+		double_shift = FALSE,
+		layer_manifold = TRUE
 	)
 	return pipe_connection
 

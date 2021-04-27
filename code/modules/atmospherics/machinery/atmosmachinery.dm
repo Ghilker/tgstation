@@ -423,14 +423,14 @@
  * * piping_layer - the piping_layer the device is in, used inside PIPING_LAYER_SHIFT
  * * forward - if TRUE we also use PIPING_FORWARD_SHIFT
  */
-/obj/machinery/atmospherics/proc/getpipeimage(iconset, iconstate, direction, col=rgb(255,255,255), piping_layer=3, forward = FALSE, set_layer = GAS_PIPE_VISIBLE_LAYER, double_shift = TRUE)
+/obj/machinery/atmospherics/proc/getpipeimage(iconset, iconstate, direction, col=rgb(255,255,255), piping_layer=3, forward = FALSE, forward_offset = PIPING_LAYER_PIXEL_SHIFT, set_layer = GAS_PIPE_VISIBLE_LAYER, double_shift = TRUE, layer_manifold = FALSE)
 
 	//Add identifiers for the iconset
 	if(iconsetids[iconset] == null)
 		iconsetids[iconset] = num2text(iconsetids.len + 1)
 
 	//Generate a unique identifier for this image combination
-	var/identifier = iconsetids[iconset] + "_[iconstate]_[direction]_[col]_[piping_layer]_[forward]_[set_layer]_[double_shift]"
+	var/identifier = iconsetids[iconset] + "_[iconstate]_[direction]_[col]_[piping_layer]_[forward]_[set_layer]_[double_shift]_[layer_manifold]"
 
 	if((!(. = pipeimages[identifier])))
 		var/image/pipe_overlay
@@ -438,10 +438,10 @@
 		pipe_overlay.color = col
 		if(double_shift)
 			PIPING_LAYER_DOUBLE_SHIFT(pipe_overlay, piping_layer)
-		else
+		else if(!layer_manifold)
 			PIPING_LAYER_SHIFT(pipe_overlay, piping_layer)
 		if(forward)
-			PIPING_FORWARD_SHIFT(pipe_overlay, piping_layer, PIPING_LAYER_PIXEL_SHIFT)
+			PIPING_FORWARD_SHIFT(pipe_overlay, piping_layer, forward_offset)
 
 ///Similar to getpipeimage(); will create an image from the set_icon and set_state; mostly used to create overlays for connections.
 /obj/machinery/atmospherics/proc/pipe_overlay(set_icon, set_state, direction, color = COLOR_VERY_LIGHT_GRAY, set_piping_layer = 3, set_layer = GAS_PIPE_VISIBLE_LAYER)
