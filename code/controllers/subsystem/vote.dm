@@ -118,6 +118,12 @@ SUBSYSTEM_DEF(vote)
 			if("map")
 				SSmapping.changemap(global.config.maplist[.])
 				SSmapping.map_voted = TRUE
+			if("transfer")
+				if(. == "Initiate Crew Transfer")
+					SSshuttle.autoEnd()
+					var/obj/machinery/computer/communications/C = locate() in GLOB.machines
+					if(C)
+						C.post_status("shuttle")
 	if(restart)
 		var/active_admins = FALSE
 		for(var/client/C in GLOB.admins + GLOB.deadmins)
@@ -196,6 +202,8 @@ SUBSYSTEM_DEF(vote)
 					if(!option || mode || !usr.client)
 						break
 					choices.Add(option)
+			if("transfer")
+				choices.Add("Initiate Crew Transfer","Continue Playing")
 			else
 				return FALSE
 		mode = vote_type
@@ -294,6 +302,8 @@ SUBSYSTEM_DEF(vote)
 		if("custom")
 			if(usr.client.holder)
 				initiate_vote("custom",usr.key)
+		if("transfer")
+			initiate_vote("transfer",usr.key)
 		if("vote")
 			submit_vote(round(text2num(params["index"])))
 	return TRUE
