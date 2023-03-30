@@ -3733,6 +3733,7 @@
 #include "code\modules\mining\laborcamp\laborshuttle.dm"
 #include "code\modules\mining\laborcamp\laborstacker.dm"
 #include "code\modules\mining\lavaland\ash_flora.dm"
+#include "code\modules\mining\lavaland\crystal_vein.dm"
 #include "code\modules\mining\lavaland\megafauna_loot.dm"
 #include "code\modules\mining\lavaland\necropolis_chests.dm"
 #include "code\modules\mining\lavaland\tendril_loot.dm"
