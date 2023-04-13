@@ -1,6 +1,6 @@
 /obj/machinery/vein_drill
-	icon = 'icons/obj/atmospherics/components/hypertorus.dmi'
-	icon_state = "core_off"
+	icon = 'icons/obj/machines/vein_drill.dmi'
+	icon_state = "vein_drill_core_off"
 
 	var/active = FALSE
 
@@ -8,7 +8,7 @@
 	density = TRUE
 
 /obj/machinery/vein_drill/body/core
-	icon_state = "core_off"
+	icon_state = "vein_drill_core_off"
 
 	use_power = NO_POWER_USE
 
@@ -34,12 +34,18 @@
 
 	if(progress < 10 SECONDS)
 		progress += 1 * delta_time
+		consume_fuel(100)
 		return
 
 	new our_vein.dropped_ore(get_turf(linked_output))
 	progress = 0
 
-	consume_fuel(5)
+/obj/machinery/vein_drill/body/core/update_appearance(updates)
+	. = ..()
+	if(active)
+		icon_state = "vein_drill_core_on"
+	else
+		icon_state = "vein_drill_core_off"
 
 /obj/machinery/vein_drill/body/core/proc/activate()
 	active = TRUE
@@ -156,10 +162,10 @@
 
 
 /obj/machinery/vein_drill/corner
-	icon_state = "corner_off"
+	icon_state = "vein_drill_corner"
 
 /obj/machinery/vein_drill/body/input
-	icon_state = "fuel_input_off"
+	icon_state = "vein_drill_input"
 	var/fuel_remaining = 0
 
 /obj/machinery/vein_drill/body/input/attackby(obj/item/item, mob/user, params)
@@ -167,15 +173,15 @@
 		var/obj/item/stack/sheet/mineral/uranium/uranium_sheet = item
 		var/uranium_amount = uranium_sheet.amount
 		if(uranium_sheet.use(uranium_sheet.amount))
-			fuel_remaining += uranium_amount
+			fuel_remaining += uranium_amount * MINERAL_MATERIAL_AMOUNT
 		return
 	return ..()
 
 /obj/machinery/vein_drill/body/output
-	icon_state = "waste_output_off"
+	icon_state = "vein_drill_output"
 
 /obj/machinery/vein_drill/body/wall
-	icon_state = "moderator_input_off"
+	icon_state = "vein_drill_wall"
 
 /obj/machinery/vein_drill/body/interface
 	icon_state = "interface_off"
